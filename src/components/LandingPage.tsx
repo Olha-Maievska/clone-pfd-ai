@@ -3,6 +3,9 @@ import { Button } from "./ui/button";
 import { usersPaths } from "@/const/users";
 import Image from "next/image";
 import { features } from "@/const/features";
+import { BookOpenCheckIcon, Facebook, Twitter, Youtube } from "lucide-react";
+import Link from "next/link";
+import { links, socials } from "@/const/footer";
 
 const LandingPage = () => {
   return (
@@ -48,7 +51,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className="section-container">
+      <section className="section-container mb-10">
         <h1 className="text-center text-3xl md:text-4xl font-semibold mb-5 sm:mb-10">
           How it works
         </h1>
@@ -72,6 +75,65 @@ const LandingPage = () => {
           ))}
         </div>
       </section>
+
+      <section className="section-container text-center">
+        <h1 className="text-3xl md:text-4xl font-semibold mb-5 sm:mb-10">
+          Get started
+        </h1>
+        <p className="text-gray-500 my-6 ">
+          Upload a document and start chatting with it today.
+          <br /> No credit card required.
+        </p>
+        <div className="w-full max-w-sm mx-auto px-4">
+          <Button variant={"orange"}>Sign up for free</Button>
+        </div>
+      </section>
+
+      <footer className="bg-[#F8F5EE] py-10">
+        <div className="mx-auto max-w-7xl px-6 md:px-4">
+          <div className="md:flex md:justify-between items-start">
+            <div className="flex items-center mb-6">
+              <BookOpenCheckIcon className="text-black w-8 h-8 mr-3" />
+              <span className="text-md md:text-lg font-medium text-black">
+                PDF Wisdom
+              </span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-x-20">
+              {links.map(({ title, items }) => (
+                <div className="text-sm" key={title}>
+                  <h2 className="font-medium mb-4">{title}</h2>
+                  <div className="flex flex-col text-gray-400 space-y-2">
+                    {items.map((item) => (
+                      <Link
+                        className="hover:underline"
+                        href={item.href}
+                        key={item.label}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <hr className="my-6 border-gray-300 lg:my-8" />
+
+          <div className="text-sm text-gray-500 sm:flex sm:items-center sm:justify-between">
+            <span>Copyright &copy; 2023, All Rights Reserved</span>
+
+            <div className="flex text-2xl space-x-6 sm:justify-center">
+              {socials.map(({ label, href, icon }) => (
+                <Link href={href} key={label}>
+                  {icon}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   );
 };
