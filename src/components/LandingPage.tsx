@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { Button } from "./ui/button";
 import { usersPaths } from "@/const/users";
@@ -6,6 +8,7 @@ import { features } from "@/const/features";
 import { BookOpenCheckIcon, Facebook, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 import { links, socials } from "@/const/footer";
+import TypewriterComponent from "typewriter-effect";
 
 const LandingPage = () => {
   return (
@@ -16,6 +19,21 @@ const LandingPage = () => {
             <h1 className="max-w-md text-3xl md:text-4xl lg:text-5xl md:leading-tight">
               Chat with any PDF document
             </h1>
+            <div className="text-2xl md:text-3xl  font-light text-orange-400">
+              <TypewriterComponent
+                options={{
+                  strings: [
+                    "Books",
+                    "Scientific reports",
+                    "User manuals",
+                    "Financial reports",
+                    "Legal documents",
+                  ],
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            </div>
             <p className="max-w-md md:max-w-sm text-white/80 font-light leading-7">
               From legal agreements to financial reports, PDF.ai brings your
               documents to life. You can ask questions, get summaries, find
@@ -90,18 +108,18 @@ const LandingPage = () => {
       </section>
 
       <footer className="bg-[#F8F5EE] py-10">
-        <div className="mx-auto max-w-7xl px-6 md:px-4">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="md:flex md:justify-between items-start">
-            <div className="flex items-center mb-6">
+            <div className="flex items-center mb-6 -mt-1">
               <BookOpenCheckIcon className="text-black w-8 h-8 mr-3" />
               <span className="text-md md:text-lg font-medium text-black">
                 PDF Wisdom
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-x-20">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-20">
               {links.map(({ title, items }) => (
-                <div className="text-sm" key={title}>
+                <div className="text-sm sm:mb-0 mb-8" key={title}>
                   <h2 className="font-medium mb-4">{title}</h2>
                   <div className="flex flex-col text-gray-400 space-y-2">
                     {items.map((item) => (
@@ -121,10 +139,10 @@ const LandingPage = () => {
 
           <hr className="my-6 border-gray-300 lg:my-8" />
 
-          <div className="text-sm text-gray-500 sm:flex sm:items-center sm:justify-between">
+          <div className="text-sm text-gray-500 flex items-center sm:justify-between flex-col sm:flex-row">
             <span>Copyright &copy; 2023, All Rights Reserved</span>
 
-            <div className="flex text-2xl space-x-6 sm:justify-center">
+            <div className="flex text-2xl space-x-6 sm:justify-center mt-2 sm:mt-0">
               {socials.map(({ label, href, icon }) => (
                 <Link href={href} key={label}>
                   {icon}
