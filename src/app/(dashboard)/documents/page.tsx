@@ -1,6 +1,6 @@
-import UploadPDF from "@/components/UploadPdf";
+import UploadPDF from "@/components/UploadPDF";
 import { documents } from "@/const/documents";
-import { File, PencilIcon, Trash2, UploadIcon } from "lucide-react";
+import { File, PencilIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
