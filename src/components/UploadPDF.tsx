@@ -1,5 +1,6 @@
 "use client";
 
+import { generatePreSignedURL } from "@/actions/s3";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -67,15 +68,43 @@ const UploadPDF = () => {
     resetForm();
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const uploadPDFToS3 = async (file: File, putUrl: string) => {
+    try {
+      const uploadResponse = await fetch(putUrl, {
+        body: file,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/pdf",
+        },
+      });
+    } catch (error) {
+      alert(error);
+    } finally {
+      resetForm();
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (file) {
-      console.log("File:", file);
-    } else if (url) {
-      console.log("URL:", url);
+    try {
+      if (file) {
+        console.log("File:", file);
+
+        const { putUrl, fileKey } = await generatePreSignedURL(
+          file.name,
+          file.type
+        );
+
+        await uploadPDFToS3(file, putUrl);
+      } else if (url) {
+        console.log("URL:", url);
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      resetForm();
     }
-    handleOpenDialog();
   };
 
   return (
