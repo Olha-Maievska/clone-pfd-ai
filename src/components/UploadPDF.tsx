@@ -1,5 +1,6 @@
 "use client";
 
+import { embedPDFToPinecone } from '@/actions/pinecone';
 import { generatePreSignedURL } from "@/actions/s3";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UploadCloud, UploadIcon, X } from "lucide-react";
+import { getPDFNameFromURL, showToast } from '@/lib/utils';
+import { Loader2, UploadCloud, UploadIcon, X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -21,17 +23,18 @@ const UploadPDF = () => {
   const [url, setUrl] = useState("");
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const pdfFile = acceptedFiles[0];
 
     if (!pdfFile) {
-      alert("Please upload only PDF file.");
+      showToast("Please upload only PDF file.");
       return;
     }
 
     if (pdfFile.size > 10 * 1024 * 1024) {
-      alert("Max file size: 10 MB");
+      showToast("Max file size: 10 MB");
       return;
     }
 
@@ -68,7 +71,7 @@ const UploadPDF = () => {
     resetForm();
   };
 
-  const uploadPDFToS3 = async (file: File, putUrl: string) => {
+  const uploadPDFToS3 = async (file: File | Blob, putUrl: string) => {
     try {
       const uploadResponse = await fetch(putUrl, {
         body: file,
@@ -77,8 +80,8 @@ const UploadPDF = () => {
           "Content-Type": "application/pdf",
         },
       });
-    } catch (error) {
-      alert(error);
+    } catch (error: any) {
+      showToast(error.message);
     } finally {
       resetForm();
     }
@@ -88,6 +91,7 @@ const UploadPDF = () => {
     e.preventDefault();
 
     try {
+      setIsLoading(true)
       if (file) {
         console.log("File:", file);
 
@@ -97,12 +101,38 @@ const UploadPDF = () => {
         );
 
         await uploadPDFToS3(file, putUrl);
+
+        const docs = await embedPDFToPinecone(fileKey);
+        console.log("Docs:", docs);
+
       } else if (url) {
-        console.log("URL:", url);
+        const proxyUrl = `https://corsproxy.io/?url=${url}`
+        const response = await fetch(proxyUrl);
+
+        const fileName = getPDFNameFromURL(url);
+        const fileSize = Number(response.headers.get("Content-Length"));
+        const fileType = response.headers.get("Content-Type");
+
+        if (!fileName || fileType !== "application/pdf") {
+          throw new Error("Invalid file type or filename");
+        }
+
+        const { putUrl, fileKey } = await generatePreSignedURL(
+          fileName,
+          fileType
+        );
+
+        const blob = await response.blob();
+        await uploadPDFToS3(blob, putUrl);
+
+        const docs = await embedPDFToPinecone(fileKey);
+        console.log("Docs:", docs);
+
       }
-    } catch (error) {
-      alert(error);
+    } catch (error: any) {
+      showToast(error.message);
     } finally {
+      setIsLoading(false);
       resetForm();
     }
   };
@@ -178,8 +208,9 @@ const UploadPDF = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="orange" disabled={!isButtonEnabled} type="submit">
-              Upload
+            <Button variant="orange" disabled={!isButtonEnabled || isLoading} type="submit">
+              {isLoading ? (<Loader2 className='h-5 w-5 text-white/80 animate-spin' style={{strokeWidth: '3'}}/>) : (`Upload`)}
+              
             </Button>
             <DialogTrigger asChild>
               <Button variant="light">Cancel</Button>
