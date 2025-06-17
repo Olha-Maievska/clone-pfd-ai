@@ -1,10 +1,26 @@
+"use server";
+
 import UploadPDF from "@/components/UploadPDF";
-import { documents } from "@/const/documents";
 import { File, PencilIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const Documents = () => {
+import prismaDB from "@/lib/prisma";
+import { auth } from "@clerk/nextjs";
+import { formatDistanceToNow } from "date-fns";
+import { formatBytes } from '@/lib/utils';
+
+const Documents = async () => {
+  const { userId } = auth();
+  const documents = await prismaDB.document.findMany({
+    where: {
+      userId: userId as string,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <section className="bg-[#faf9f6] min-h-screen">
       <div className="section-container">
@@ -13,8 +29,8 @@ const Documents = () => {
           <UploadPDF />
         </div>
 
-        <div className="bg-white rounded w-full overflow-x-scroll">
-          <table className="min-w-full">
+        <div className="bg-white rounded w-full">
+          <table className="min-w-full overflow-x-scroll">
             <tbody>
               {documents.map((doc, index) => (
                 <tr
@@ -32,15 +48,17 @@ const Documents = () => {
                     />
                     <Link href="/documents/1">
                       <span className="text-ellipsis overflow-hidden whitespace-normal max-w-[300px] text-sm font-medium">
-                        {doc.filename}
+                        {doc.fileName}
                       </span>
                     </Link>
                   </td>
                   <td className="p-4 text-sm text-gray-500 whitespace-nowrap text-right w-20">
-                    {doc.size}
+                    {formatBytes(doc.fileSize)}
                   </td>
                   <td className="p-4 text-sm text-gray-500 whitespace-nowrap text-right w-20">
-                    {doc.date}
+                    {formatDistanceToNow(doc.createdAt, {
+                      addSuffix: true,
+                    })}
                   </td>
                   <td className="p-4 text-right w-4">
                     <PencilIcon
@@ -56,6 +74,12 @@ const Documents = () => {
                   </td>
                 </tr>
               ))}
+
+              {documents.length == 0 && (
+                <tr>
+                  <td className="p-4 italic">None</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
