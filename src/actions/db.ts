@@ -47,7 +47,10 @@ export const getDocument = async (documentId: string) => {
   return { document };
 };
 
-export const updateDocument = async (documentId: string, formData: FormData) => {
+export const updateDocument = async (
+  documentId: string,
+  formData: FormData
+) => {
   const user = await currentUser();
 
   if (!user || !user.id || !user.firstName) {
@@ -56,13 +59,30 @@ export const updateDocument = async (documentId: string, formData: FormData) => 
 
   const fileName = formData.get("documentName") as string;
 
-  const document = await prismaDB.document.update({
+  await prismaDB.document.update({
     where: {
       id: documentId,
       userId: user.id,
     },
     data: {
-      fileName
+      fileName,
+    },
+  });
+
+  revalidatePath("/documents");
+};
+
+export const deleteDocument = async (documentId: string) => {
+  const user = await currentUser();
+
+  if (!user || !user.id || !user.firstName) {
+    throw new Error("Unauthorized");
+  }
+
+  await prismaDB.document.delete({
+    where: {
+      id: documentId,
+      userId: user.id,
     },
   });
 
