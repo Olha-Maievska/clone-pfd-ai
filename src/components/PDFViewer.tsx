@@ -80,7 +80,7 @@ const PDFViewer = ({ url }: { url: string }) => {
     sidebarTabs: () => [],
   });
   return (
-    <div className="w-1/2 h-screen">
+    <div className="w-1/2 h-[calc(100vh-60px)]">
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
         <Viewer
           plugins={[defaultLayoutPluginInstance]}

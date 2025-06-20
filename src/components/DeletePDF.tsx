@@ -14,11 +14,11 @@ import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import SubmitButton from "./SubmitButton";
 
-import { useTransition } from 'react';
-import { toast } from 'react-toastify';
-import { deleteDocument } from '@/actions/db';
-import { deleteS3PDF } from '@/actions/s3';
-import { deletePineconeNameSpace } from '@/actions/pinecone';
+import { useTransition } from "react";
+import { toast } from "react-toastify";
+import { deleteDocument } from "@/actions/db";
+import { deleteS3PDF } from "@/actions/s3";
+import { deletePineconeNameSpace } from "@/actions/pinecone";
 
 interface Props {
   document: Document;
@@ -38,7 +38,10 @@ const DeletePDF = ({ document }: Props) => {
         />
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Delete document</DialogTitle>
           <DialogDescription className="sr-only">
@@ -57,19 +60,25 @@ const DeletePDF = ({ document }: Props) => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Button variant="orange" disabled={isPending} onClick={() => startTransition(() => {
-			try {
-				const fileKey = document.fileKey;
-				deleteS3PDF(fileKey);
-				deletePineconeNameSpace(fileKey);
-				deleteDocument(document.id);
-				setIsOpen(false);
-			} catch (error) {
-				console.log(error);
-				
-				toast("Could not complete the process");
-			}
-		  })}>
+          <Button
+            variant="orange"
+            disabled={isPending}
+            onClick={() =>
+              startTransition(() => {
+                try {
+                  const fileKey = document.fileKey;
+                  deleteS3PDF(fileKey);
+                  deletePineconeNameSpace(fileKey);
+                  deleteDocument(document.id);
+                  setIsOpen(false);
+                } catch (error) {
+                  console.log(error);
+
+                  toast("Could not complete the process");
+                }
+              })
+            }
+          >
             {isPending ? (
               <Loader2
                 className="h-5 w-5 text-white/80 animate-spin"
