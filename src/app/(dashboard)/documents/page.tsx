@@ -1,7 +1,7 @@
 "use server";
 
 import UploadPDF from "@/components/UploadPDF";
-import { File, PencilIcon, Trash2 } from "lucide-react";
+import { File, Trash2 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -9,6 +9,7 @@ import prismaDB from "@/lib/prisma";
 import { auth } from "@clerk/nextjs";
 import { formatDistanceToNow } from "date-fns";
 import { formatBytes } from '@/lib/utils';
+import UpdatePDF from '@/components/UpdatePDF';
 
 const Documents = async () => {
   const { userId } = auth();
@@ -46,7 +47,7 @@ const Documents = async () => {
                       className="w-4 h-4 mr-2"
                       style={{ strokeWidth: "3" }}
                     />
-                    <Link href="/documents/1">
+                    <Link href={`/documents/${doc.id}`}>
                       <span className="text-ellipsis overflow-hidden whitespace-normal max-w-[300px] text-sm font-medium">
                         {doc.fileName}
                       </span>
@@ -61,10 +62,7 @@ const Documents = async () => {
                     })}
                   </td>
                   <td className="p-4 text-right w-4">
-                    <PencilIcon
-                      className="w-4 h-4 cursor-pointer"
-                      style={{ strokeWidth: "3" }}
-                    />
+                    <UpdatePDF document={doc}/>
                   </td>
                   <td className="p-4 text-right w-4">
                     <Trash2

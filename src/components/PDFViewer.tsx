@@ -11,7 +11,7 @@ import {
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
-const PDFViewer = () => {
+const PDFViewer = ({ url }: { url: string }) => {
   const renderToolbar = (Toolbar: (props: ToolbarProps) => ReactElement) => (
     <Toolbar>
       {(slots: ToolbarSlot) => {
@@ -84,7 +84,7 @@ const PDFViewer = () => {
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
         <Viewer
           plugins={[defaultLayoutPluginInstance]}
-          fileUrl="https://olhaclonepdfai.s3.eu-north-1.amazonaws.com/users/user_2y5FcTGbU4pK30liWqR0WcWUAA1/1750067061909-Tony_Robbins.pdf"
+          fileUrl={url}
         />
       </Worker>
     </div>
