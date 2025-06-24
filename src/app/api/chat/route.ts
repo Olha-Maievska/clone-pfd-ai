@@ -6,9 +6,17 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { OpenAI } from "langchain/llms/openai";
 import { CallbackManager } from "langchain/callbacks";
 import { VectorDBQAChain } from "langchain/chains";
+import { Role } from "@prisma/client";
+import prismaDB from "@/lib/prisma";
+import { auth } from "@clerk/nextjs";
 
 export async function POST(request: NextRequest) {
-  const { messages, fileKey } = await request.json();
+  const { messages, fileKey, documentId } = await request.json();
+  const { userId } = auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
 
   const query = messages[messages.length - 1].content;
 
@@ -19,6 +27,8 @@ export async function POST(request: NextRequest) {
   });
 
   const index = pinecone.Index(process.env.PINECONE_INDEX!);
+
+  await saveMessage(documentId, "user", query, userId);
 
   const vectorStore = await PineconeStore.fromExistingIndex(
     new OpenAIEmbeddings(),
@@ -38,7 +48,38 @@ export async function POST(request: NextRequest) {
     returnSourceDocuments: true,
   });
 
-  chain.call({ query }).catch(console.error);
+  chain
+    .call({ query })
+    .then(async (res) => {
+      if (res) {
+        await saveMessage(documentId, "assistant", res.text, userId);
+      }
+    })
+    .catch(console.error);
 
   return new StreamingTextResponse(stream);
+}
+
+export async function saveMessage(
+  documentId: string,
+  role: Role,
+  content: string,
+  userId: string
+) {
+  const document = await prismaDB.document.update({
+    where: {
+      id: documentId,
+      userId,
+    },
+    data: {
+      messages: {
+        create: {
+          role,
+          content,
+        },
+      },
+    },
+  });
+
+  return document;
 }
