@@ -1,12 +1,13 @@
-"use client";
-
 import { BookOpenCheck } from "lucide-react";
-import { useAuth, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import PricingModal from "./PricingModal";
+import { isValidSubscription } from "@/lib/subscription";
+import { Billing } from "./Billing";
 
-const DashboardBar = () => {
-  const { isSignedIn } = useAuth();
+const DashboardBar = async () => {
+  const isSubscription = await isValidSubscription();
 
   return (
     <header className="sticky top-0 left-0 z-50 w-full bg-[#f8f5ee] backdrop-blur border-slate-500/10">
@@ -20,6 +21,8 @@ const DashboardBar = () => {
           </div>
 
           <div className="flex">
+            {isSubscription ? <Billing /> : <PricingModal />}
+
             <Link href={"/documents"}>
               <Button variant="link">Documents</Button>
             </Link>

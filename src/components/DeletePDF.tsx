@@ -12,7 +12,6 @@ import {
 import { Document } from "@prisma/client";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
-import SubmitButton from "./SubmitButton";
 
 import { useTransition } from "react";
 import { toast } from "react-toastify";
