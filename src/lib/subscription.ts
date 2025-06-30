@@ -76,9 +76,9 @@ export const isMaxFreeDocuments = async () => {
 
 export const needToUpgrade = async () => {
   const subscripted = await isValidSubscription();
-  const reachedFoQuota = await isMaxFreeDocuments();
+  const reachedFreeQuota = await isMaxFreeDocuments();
 
-  if (!subscripted || reachedFoQuota) return true
+  if (!subscripted && reachedFreeQuota) return true;
 
-  return false
+  return false;
 };

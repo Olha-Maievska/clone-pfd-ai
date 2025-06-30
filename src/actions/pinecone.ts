@@ -1,13 +1,14 @@
 "use server";
 
 import { auth } from "@clerk/nextjs";
-import { PDFLoader } from "langchain/document_loaders/fs/pdf";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { Document } from "langchain/document";
 import { CharacterTextSplitter } from "langchain/text_splitter";
 
 import { Pinecone } from "@pinecone-database/pinecone";
-import { PineconeStore } from "langchain/vectorstores/pinecone";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { PineconeStore } from "@langchain/community/vectorstores/pinecone";
+import { OpenAIEmbeddings } from "@langchain/openai";
+
 import { needToUpgrade } from "@/lib/subscription";
 
 export const embedPDFToPinecone = async (fileKey: string) => {

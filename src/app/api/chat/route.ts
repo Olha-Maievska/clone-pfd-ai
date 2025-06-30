@@ -1,10 +1,10 @@
 import { NextRequest } from "next/server";
 import { LangChainStream, StreamingTextResponse } from "ai";
 import { Pinecone } from "@pinecone-database/pinecone";
-import { PineconeStore } from "langchain/vectorstores/pinecone";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { OpenAI } from "langchain/llms/openai";
-import { CallbackManager } from "langchain/callbacks";
+import { PineconeStore } from "@langchain/community/vectorstores/pinecone";
+import { OpenAIEmbeddings } from "@langchain/openai";
+import { ChatOpenAI } from "@langchain/openai";
+import { CallbackManager } from "@langchain/core/callbacks/manager";
 import { VectorDBQAChain } from "langchain/chains";
 import { Role } from "@prisma/client";
 import prismaDB from "@/lib/prisma";
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       namespace: fileKey,
     }
   );
-  const model = new OpenAI({
+  const model = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
     streaming: true,
     callbackManager: CallbackManager.fromHandlers(handlers),
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
   return new StreamingTextResponse(stream);
 }
 
-export async function saveMessage(
+async function saveMessage(
   documentId: string,
   role: Role,
   content: string,
