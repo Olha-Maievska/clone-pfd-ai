@@ -3,6 +3,7 @@
 import prismaDB from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@clerk/nextjs";
+import { needToUpgrade } from '@/lib/subscription';
 
 export const createDocument = async (
   fileName: string,
@@ -13,6 +14,12 @@ export const createDocument = async (
 
   if (!user || !user.id || !user.firstName) {
     throw new Error("Unauthorized");
+  }
+
+  const reachedQuota = await needToUpgrade();
+
+  if (reachedQuota) {
+    throw new Error("Reached free quota. Please upgrade!");
   }
 
   const document = await prismaDB.document.create({

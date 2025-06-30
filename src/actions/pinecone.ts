@@ -8,12 +8,19 @@ import { CharacterTextSplitter } from "langchain/text_splitter";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { needToUpgrade } from "@/lib/subscription";
 
 export const embedPDFToPinecone = async (fileKey: string) => {
   const { userId } = auth();
 
   if (!userId) {
     throw new Error("Unauthorized");
+  }
+
+  const reachedQuota = await needToUpgrade();
+
+  if (reachedQuota) {
+    throw new Error("Reached free quota. Please upgrade!");
   }
 
   const pdfFile = await fetch(
@@ -81,4 +88,4 @@ export const deletePineconeNameSpace = async (fileKey: string) => {
   await vectorStore.delete({
     deleteAll: true,
   });
-}
+};

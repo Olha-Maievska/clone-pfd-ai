@@ -1,7 +1,15 @@
-import { Button } from './ui/button';
+import { generateBillingLink } from "@/lib/subscription";
+import { Button } from "./ui/button";
 
-export const Billing = () => {
-  return <a href={process.env.STRIPE_BILLING_PORTAL_URL!}>
-	<Button variant="link">🧲 Billing</Button>
-  </a>;
-}
+export const Billing = async () => {
+  const portalUrl = await generateBillingLink();
+  return (
+    <>
+      {portalUrl && (
+        <a href={portalUrl}>
+          <Button variant="link">🧲 Billing</Button>
+        </a>
+      )}
+    </>
+  );
+};

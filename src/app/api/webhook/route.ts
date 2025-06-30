@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   const session = event.data.object as Stripe.Checkout.Session;
 
   if (event.type === "checkout.session.completed") {
-    if (!session.client_reference_id) {
+    if (!session?.client_reference_id) {
       return new NextResponse("No client reference id", { status: 400 });
     }
 
@@ -45,22 +45,45 @@ export async function POST(request: Request) {
   }
 
   if (event.type === "invoice.payment_succeeded") {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    );
+    const invoice = event.data.object as Stripe.Invoice;
 
-    await prismaDB.subscription.update({
-      where: {
-        stripeSubscriptionId: subscription.id,
-      },
-      data: {
-        stripePriceId: subscription.items.data[0].price.id,
-        stripeCurrentPeriodEnd: new Date(
-          subscription.current_period_end * 1000
-        ),
-      },
-    });
+    if (!invoice.subscription) {
+      console.warn("Invoice has no subscription attached. Skipping.");
+      return new NextResponse(null, { status: 200 });
+    }
 
+    const subscriptionId = invoice.subscription as string;
+
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+    try {
+      const existing = await prismaDB.subscription.findUnique({
+        where: {
+          stripeSubscriptionId: subscription.id,
+        },
+      });
+
+      if (!existing) {
+        return new NextResponse("Subscription not found in DB", {
+          status: 200,
+        });
+      }
+
+      await prismaDB.subscription.update({
+        where: {
+          stripeSubscriptionId: subscription.id,
+        },
+        data: {
+          stripePriceId: subscription.items.data[0].price.id,
+          stripeCurrentPeriodEnd: new Date(
+            subscription.current_period_end * 1000
+          ),
+        },
+      });
+    } catch (err) {
+      console.error("Error updating subscription:", err);
+      return new NextResponse("Update failed", { status: 500 });
+    }
   }
 
   return new NextResponse(null, { status: 200 });
