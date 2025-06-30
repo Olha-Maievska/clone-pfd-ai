@@ -29,7 +29,7 @@ const Chat = ({ document }: Props) => {
   }, [messages]);
 
   return (
-    <div className="w-1/2 h-[calc(100vh-60px)] overflow-scroll bg-white">
+    <div className="md:w-1/2 w-full h-[calc(100vh-60px)]  overflow-scroll bg-white">
       <div className="h-full flex flex-col justify-between">
         <div className="overflow-auto bg-white">
           <div className="flex flex-col">

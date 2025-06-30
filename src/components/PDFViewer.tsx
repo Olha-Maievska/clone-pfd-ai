@@ -18,7 +18,6 @@ const PDFViewer = ({ url }: { url: string }) => {
         const {
           CurrentPageInput,
           Download,
-          EnterFullScreen,
           GoToNextPage,
           GoToPreviousPage,
           NumberOfPages,
@@ -39,29 +38,32 @@ const PDFViewer = ({ url }: { url: string }) => {
             <div style={{ padding: "0px 2px" }}>
               <ShowSearchPopover />
             </div>
-            <div style={{ padding: "0px 2px" }}>
+            <div style={{ padding: "0px 2px" }} className="hidden xs:block">
               <ZoomOut />
             </div>
             <div style={{ padding: "0px 2px" }}>
               <Zoom />
             </div>
-            <div style={{ padding: "0px 2px" }}>
+            <div style={{ padding: "0px 2px" }} className="hidden xs:block">
               <ZoomIn />
             </div>
-            <div style={{ padding: "0px 2px", marginLeft: "auto" }}>
+            <div
+              style={{ padding: "0px 2px", marginLeft: "auto" }}
+            >
               <GoToPreviousPage />
             </div>
-            <div style={{ padding: "0px 2px", width: "3rem" }}>
+            <div
+              style={{ padding: "0px 1px", width: "40px" }}
+            >
               <CurrentPageInput />
             </div>
-            <div style={{ padding: "0px 2px", marginLeft: "5px" }}>
+            <div
+              style={{ padding: "0px 2px", marginLeft: "3px" }}
+            >
               / <NumberOfPages />
             </div>
             <div style={{ padding: "0px 2px" }}>
               <GoToNextPage />
-            </div>
-            <div style={{ padding: "0px 2px", marginLeft: "auto" }}>
-              <EnterFullScreen />
             </div>
             <div style={{ padding: "0px 2px" }}>
               <Download />
@@ -80,12 +82,9 @@ const PDFViewer = ({ url }: { url: string }) => {
     sidebarTabs: () => [],
   });
   return (
-    <div className="w-1/2 h-[calc(100vh-60px)]">
+    <div className="md:w-1/2 w-full h-[calc(100vh-60px)]">
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-        <Viewer
-          plugins={[defaultLayoutPluginInstance]}
-          fileUrl={url}
-        />
+        <Viewer plugins={[defaultLayoutPluginInstance]} fileUrl={url} />
       </Worker>
     </div>
   );

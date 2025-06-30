@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { Button } from "./ui/button";
@@ -9,8 +9,18 @@ import { BookOpenCheckIcon, Facebook, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 import { links, socials } from "@/const/footer";
 import TypewriterComponent from "typewriter-effect";
+import { useAuth } from "@clerk/nextjs";
 
 const LandingPage = () => {
+  const { isSignedIn } = useAuth();
+
+  const handleClick = () => {
+    if (isSignedIn) {
+      window.location.href = "/documents";
+    } else {
+      window.location.href = "/sign-in";
+    }
+  };
   return (
     <>
       <section className="bg-[#072426]">
@@ -41,7 +51,9 @@ const LandingPage = () => {
             </p>
 
             <div className="flex justify-center md:justify-start">
-              <Button variant={"orange"}>Get started for free</Button>
+              <Button variant={"orange"} onClick={handleClick}>
+                Get started for free
+              </Button>
             </div>
 
             <div className="flex items-center mt-6 flex-col md:flex-row">

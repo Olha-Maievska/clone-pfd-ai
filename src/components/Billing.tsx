@@ -7,7 +7,9 @@ export const Billing = async () => {
     <>
       {portalUrl && (
         <a href={portalUrl}>
-          <Button variant="link">🧲 Billing</Button>
+          <Button variant="link" className="sm:px-4 px-[10px]">
+            🧲 Billing
+          </Button>
         </a>
       )}
     </>

@@ -28,7 +28,7 @@ const ChatPage = async ({ params: { id } }: Props) => {
 
   const s3Url = `https://${bucket}.s3.${region}.amazonaws.com/${fileKey}`;
   return (
-    <div className="flex">
+    <div className="flex md:flex-row flex-col-reverse">
       <PDFViewer url={s3Url} />
       <Chat document={document} />
     </div>

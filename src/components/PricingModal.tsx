@@ -20,21 +20,23 @@ const PricingModal = async () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link">🎁 Upgrade</Button>
+        <Button variant="link" className="sm:px-4 px-[10px]">
+          🎁 Upgrade
+        </Button>
       </DialogTrigger>
 
-      <DialogContent
-        className="max-w-2xl bg-[#f8f5ee]"
-      >
+      <DialogContent className="max-w-2xl bg-[#f8f5ee]">
         <DialogHeader>
-          <DialogTitle className='text-center mb-6'>Upgrade your account</DialogTitle>
+          <DialogTitle className="text-center mb-6">
+            Upgrade your account
+          </DialogTitle>
           <DialogDescription className="sr-only">
             {" "}
             This is a description{" "}
           </DialogDescription>
         </DialogHeader>
 
-		<PricingTable clientReferenceId={user.id} customerEmail={email} />
+        <PricingTable clientReferenceId={user.id} customerEmail={email} />
       </DialogContent>
     </Dialog>
   );
