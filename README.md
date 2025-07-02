@@ -6,18 +6,18 @@ Chat with PDF is an AI-powered SaaS application that enables users to upload PDF
 
 ### Project Structure
 
-├── public/  
-├── src/  
-	     ├── actions/            # Server actions (Next.js 13+)  
-	     ├── app/                # App directory (routes, layouts, etc.)  
-	     ├── components/         # Reusable UI components  
-	     ├── const/              # Static constants and configuration  
-	     ├── lib/                # Utility libraries and integrations (e.g., OpenAI, PDF parsing, Pinecone)  
-	     └── middleware.ts       # Middleware for auth, logging, etc.  
-├── prisma/                 # Prisma schema and DB migrations  
-├── .env                    # Environment variables (not committed)  
-├── README.md               # Project documentation  
-├── package.json            # Project metadata and dependencies  
+- public/  
+- src/  
+	- actions/            # Server actions (Next.js 13+)  
+	- app/                # App directory (routes, layouts, etc.)  
+	- components/         # Reusable UI components  
+	- const/              # Static constants and configuration  
+	- lib/                # Utility libraries and integrations (e.g., OpenAI, PDF parsing, Pinecone)  
+	- middleware.ts       # Middleware for auth, logging, etc.  
+- prisma/                 # Prisma schema and DB migrations  
+- .env                    # Environment variables (not committed)  
+- README.md               # Project documentation  
+- package.json            # Project metadata and dependencies  
 
 ### Features
 
