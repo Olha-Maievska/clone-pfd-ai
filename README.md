@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This project was built as part of the online course by [Code4Startup.](https://code4startup.com/ai_saas/)
 
-## Getting Started
+I followed the course to learn how to build AI-powered SaaS products using modern tools and best practices. The core implementation is based on the course, with some customizations and extensions.
 
-First, run the development server:
+Chat with PDF is an AI-powered SaaS application that enables users to upload PDF documents and engage in real-time conversations with them using integrated large language models (LLMs). It's a complete end-to-end project built with modern web technologies, vector databases, and serverless infrastructure.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+├── public/     
+├── src/
+│   ├── actions/            # Server actions (Next.js 13+)
+│   ├── app/                # App directory (routes, layouts, etc.)
+│   ├── components/         # Reusable UI components
+│   ├── const/              # Static constants and configuration
+│   ├── lib/                # Utility libraries and integrations (e.g., OpenAI, PDF parsing, Pinecone)
+│   └── middleware.ts       # Middleware for auth, logging, etc.
+├── prisma/                 # Prisma schema and DB migrations
+├── .env                    # Environment variables (not committed)
+├── README.md               # Project documentation
+├── package.json            # Project metadata and dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+📤 Upload and parse any PDF
+💬 Real-time Q&A with document content
+🔐 Secure auth with Clerk
+💳 Subscription billing via Stripe
+🌐 Serverless deployment with Vercel
+📚 Uses embeddings & vector search (Pinecone)
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+Frontend -	Next.js 13 (App Router), Tailwind CSS, React, Radix UI
+Backend -	LangChain, OpenAI API, Pinecone, Prisma ORM
+Auth & Billing -	Clerk (authentication), Stripe (subscription management)
+Storage -	AWS S3 (or compatible storage)
+PDF Parsing -	pdf-parse, pdfjs-dist, @react-pdf-viewer
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
