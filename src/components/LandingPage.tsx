@@ -115,7 +115,7 @@ const LandingPage = () => {
           <br /> No credit card required.
         </p>
         <div className="w-full max-w-sm mx-auto px-4">
-          <Button variant={"orange"}>Sign up for free</Button>
+          <Button variant={"orange"} onClick={handleClick}>Sign up for free</Button>
         </div>
       </section>
 
